@@ -1,28 +1,11 @@
-<script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
-<select id="time" name="time">
-  <option value="1">1時間</option>
-  <option value="2">2時間</option>
-  <option value="3">3時間</option>
-  <option value="4">4時間</option>
-  <option value="5">5時間</option>
-	<option value="6">6時間</option>
-</select>
-<input type="button" onclick="outputPdf();" value="PDF出力">
-<script type="text/javascript">
-function outputPdf() {
-	var time = $('#time').val();
-	alert(time);
-	$.ajax({
-      type: "POST",
-      url: "/output_pdf",
-      data: {
-        time: time
-      },
-      dataType: 'html'
-    }).done(function(data) {
-      document.location = "/";
-    }).fail(function(data) {
-    }
-    );
-}
-</script>
+<form action="/output_pdf" method="GET">
+  <select id="time" name="time">
+    <option value="1">1時間</option>
+    <option value="2">2時間</option>
+    <option value="3">3時間</option>
+    <option value="4">4時間</option>
+    <option value="5">5時間</option>
+	  <option value="6">6時間</option>
+  </select>
+  <input type="submit" value="PDF出力">
+</form>
