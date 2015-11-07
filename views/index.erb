@@ -1,5 +1,6 @@
-<form action="/output_pdf" method="GET">
-  <select id="period" name="period">
+<form name="timetable" action="/output_pdf" method="GET">
+  <select id="period" name="period" onChange="inputItems();">
+    <option value="0" selected>時間を指定しください</option>
     <option value="1">1時間</option>
     <option value="2">2時間</option>
     <option value="3">3時間</option>
@@ -9,3 +10,26 @@
   </select>
   <input type="submit" value="PDF出力">
 </form>
+<script type="text/javascript">
+  function inputItems() {
+    var obj = document.timetable.period;
+    var index = obj.selectedIndex;
+    var form = document.getElementsByTagName("form")[0];
+    for (var i = 1; i <= index; i++) {
+      var div = document.createElement("div"); 
+      var p = document.createElement("p");
+      p.textContent = i; 
+      div.appendChild(p);
+      var ul = document.createElement("ul");
+      for (var j = 0; j < 5; j++) {
+        var li = document.createElement("li");
+        var input = document.createElement("input");
+        input.setAttribute("type", "text");
+        li.appendChild(input);
+        ul.appendChild(li);
+      }
+      div.appendChild(ul);
+      form.appendChild(div);
+    }
+  }
+</script>
