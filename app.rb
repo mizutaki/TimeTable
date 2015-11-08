@@ -33,7 +33,7 @@ class MainApp < Sinatra::Base
     file_path = "public/images/#{file_name}"
     Prawn::Document.generate(file_path) {
       stroke_axis
-  
+      font "vender/fonts/ipaexg.ttf"
       text "TimeTable"
       bounding_box([150,650],:width=>300,:height=>300) {
         table timetable
