@@ -1,4 +1,10 @@
-<form name="timetable" action="/output_pdf" method="GET">
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/main.css" media="screen">
+  <script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+</head>
+<div id="timetable" name="timetable">
   <select id="period" name="period" onChange="inputItems();">
     <option value="0" selected>時間を指定しください</option>
     <option value="1">1時間</option>
@@ -8,28 +14,84 @@
     <option value="5">5時間</option>
 	  <option value="6">6時間</option>
   </select>
-  <input type="submit" value="PDF出力">
-</form>
+  <input type="button" value="PDF出力" onclick="downloadPDF();">
+</div>
 <script type="text/javascript">
   function inputItems() {
-    var obj = document.timetable.period;
+    var obj = document.getElementById("period");
     var index = obj.selectedIndex;
-    var form = document.getElementsByTagName("form")[0];
+    var form = document.getElementById("timetable");
     for (var i = 1; i <= index; i++) {
-      var div = document.createElement("div"); 
+      var div = document.createElement("div");
+      div.setAttribute("id", "timePeriod" + i);
       var p = document.createElement("p");
       p.textContent = i; 
       div.appendChild(p);
       var ul = document.createElement("ul");
+      ul.setAttribute("id", "dayofweek" + i);
       for (var j = 0; j < 5; j++) {
         var li = document.createElement("li");
+        var label = document.createElement("label");
+        var dayofweek = changeDayOfWeek(j);
+        label.innerHTML = dayofweek;
         var input = document.createElement("input");
         input.setAttribute("type", "text");
-        li.appendChild(input);
+        input.setAttribute("name", dayofweek);
+        input.setAttribute("value","");
+        label.appendChild(input);
+        li.appendChild(label);
         ul.appendChild(li);
       }
       div.appendChild(ul);
       form.appendChild(div);
     }
   }
+
+  function changeDayOfWeek(i) {
+    var dayofweek = "";
+    if (i == 0) {
+      dayofweek = "mon";
+    }else if (i == 1) {
+      dayofweek = "tue";
+    }else if (i == 2) {
+      dayofweek = "wed";
+    }else if (i == 3) {
+      dayofweek = "thu";
+    }else if (i == 4) {
+      dayofweek = "fri";
+    }
+    return dayofweek;
+  }
+
+  function downloadPDF() {
+    var select = document.getElementById("period");
+    var index = select.selectedIndex;
+    var timeTable = []; 
+    for (var i = 1; i <= index; i++) {
+      var ul = document.getElementById("dayofweek" + i);
+      var lis = ul.children;
+      var dayofweeks = [];
+      for (var j = 0; j < lis.length; j++) {
+         var li = lis[j];
+         var dayofweek = changeDayOfWeek(j);
+         var input = li.getElementsByTagName('input');
+         dayofweeks[j] = input[0].value;
+      }
+      timeTable[i-1] = dayofweeks;
+    }
+    var records = JSON.stringify(timeTable);
+    $.ajax({
+      type: "POST",
+      url: "/output_pdf",
+      data: {
+        records: records,
+      },
+      dataType: 'html'
+    }).done(function(res) {
+      location.href = "/download_pdf/" + res
+    }).fail(function(res) {
+      alert("error");
+    });
+  }
 </script>
+</html>
