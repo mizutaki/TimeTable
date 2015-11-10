@@ -21,7 +21,7 @@ class MainApp < Sinatra::Base
 
   post '/output_pdf' do
     timetable = []
-    timetable_dayofweek = ["","Mon","Tues","Wed","Thur","Fri"]
+    timetable_dayofweek = ["","Mon","Tue","Wed","Thu","Fri"]
     timetable << timetable_dayofweek
     records = JSON.parse(params[:records])
     records.each_with_index do |record,idx|
@@ -31,14 +31,15 @@ class MainApp < Sinatra::Base
     end
     file_name = File.basename(__FILE__,".rb")+".pdf"
     file_path = "public/images/#{file_name}"
-    Prawn::Document.generate(file_path) {
-      stroke_axis
-      font "vender/fonts/ipaexg.ttf"
-      text "TimeTable"
-      bounding_box([150,650],:width=>300,:height=>300) {
-        table timetable
+    Prawn::Document.generate(file_path) do |pdf|
+      pdf.stroke_axis
+      pdf.font "vender/fonts/ipaexg.ttf"
+      pdf.font_size(40)
+      pdf.text "TimeTable"
+      pdf.bounding_box([40,550],:width=>550,:height=>700) {
+        pdf.table timetable
       }
-    }
+    end
     file_name
   end
 end
