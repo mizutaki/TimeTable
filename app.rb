@@ -4,6 +4,7 @@ require 'sinatra/reloader'
 require 'prawn'
 require 'prawn/table'
 require 'json'
+require 'csv'
 
 class MainApp < Sinatra::Base
   set :public, File.dirname(__FILE__) + '/public'
@@ -12,7 +13,7 @@ class MainApp < Sinatra::Base
     erb :index
   end
 
-  get '/download_pdf/:file_name' do
+  get '/download/:file_name' do
     response.headers["Content-Disposition"] = "attachment"
     file_name = params['file_name']
     file_path = "public/images/#{file_name}"
@@ -39,6 +40,17 @@ class MainApp < Sinatra::Base
       pdf.bounding_box([40,550],:width=>550,:height=>700) {
         pdf.table timetable
       }
+    end
+    file_name
+  end
+
+  post '/output_backupfile' do
+    file_name = "bk.csv"
+    CSV.open("public/images/#{file_name}", "w") do |w|
+      records = JSON.parse(params[:records])
+      records.each do |record|
+        w << record
+      end
     end
     file_name
   end

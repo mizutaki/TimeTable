@@ -15,6 +15,7 @@
 	  <option value="6">6時間</option>
   </select>
   <input type="button" value="PDF出力" onclick="downloadPDF();">
+  <input type="button" value="バックアップファイル出力" onclick="downloadBackupFile();">
 </div>
 <script type="text/javascript">
   function inputItems() {
@@ -64,6 +65,38 @@
   }
 
   function downloadPDF() {
+    var records = getPostData();
+    $.ajax({
+      type: "POST",
+      url: "/output_pdf",
+      data: {
+        records: records,
+      },
+      dataType: 'html'
+    }).done(function(res) {
+      location.href = "/download/" + res
+    }).fail(function(res) {
+      alert("error");
+    });
+  }
+
+  function downloadBackupFile() {
+    var records = getPostData();
+    $.ajax({
+      type: "POST",
+      url: "/output_backupfile",
+      data: {
+        records: records,
+      },
+      dataType: 'html'
+    }).done(function(res) {
+      location.href = "/download/" + res
+    }).fail(function(res) {
+      alert("error");
+    });
+  }
+
+  function getPostData() {
     var select = document.getElementById("period");
     var index = select.selectedIndex;
     var timeTable = []; 
@@ -80,18 +113,7 @@
       timeTable[i-1] = dayofweeks;
     }
     var records = JSON.stringify(timeTable);
-    $.ajax({
-      type: "POST",
-      url: "/output_pdf",
-      data: {
-        records: records,
-      },
-      dataType: 'html'
-    }).done(function(res) {
-      location.href = "/download_pdf/" + res
-    }).fail(function(res) {
-      alert("error");
-    });
+    return records
   }
 </script>
 </html>
