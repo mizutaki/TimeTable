@@ -46,7 +46,7 @@ class MainApp < Sinatra::Base
 
   post '/output_backupfile' do
     file_name = "bk.csv"
-    CSV.open("public/imagqes/#{file_name}", "w") do |w|
+    CSV.open("public/images/#{file_name}", "w") do |w|
       records = JSON.parse(params[:records])
       records.each do |record|
         w << record
