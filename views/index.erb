@@ -25,9 +25,12 @@
   },false);
 
   function inputItems() {
+    init();
     var obj = document.getElementById("period");
     var index = obj.selectedIndex;
     var form = document.getElementById("timetable");
+    var timePeriod = document.createElement("div");
+    timePeriod.setAttribute("id","timePeriod");
     for (var i = 1; i <= index; i++) {
       var div = document.createElement("div");
       div.setAttribute("id", "timePeriod" + i);
@@ -50,8 +53,15 @@
         ul.appendChild(li);
       }
       div.appendChild(ul);
-      form.appendChild(div);
+      timePeriod.appendChild(div);
+      timetable.appendChild(timePeriod);
     }
+  }
+
+  function init() {
+    var timePeriod = document.getElementById("timePeriod");
+    if (timePeriod == null) return;
+    timePeriod.parentNode.removeChild(timePeriod);
   }
 
   function changeDayOfWeek(i) {
