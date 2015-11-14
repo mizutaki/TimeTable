@@ -16,8 +16,14 @@
   </select>
   <input type="button" value="PDF出力" onclick="downloadPDF();">
   <input type="button" value="バックアップファイル出力" onclick="downloadBackupFile();">
+  <input type="file" id="readfile" value="バックアップファイル読み込み" onclick="readBackupFile();">
 </div>
 <script type="text/javascript">
+  var readfile = document.getElementById("readfile");
+  readfile.addEventListener("change", function(evt) {
+    readBackupFile(evt);
+  },false);
+
   function inputItems() {
     var obj = document.getElementById("period");
     var index = obj.selectedIndex;
@@ -94,6 +100,31 @@
     }).fail(function(res) {
       alert("error");
     });
+  }
+
+  function readBackupFile(evt) {
+    var file = evt.target.files;
+    var reader = new FileReader();
+    reader.readAsText(file[0]);
+    reader.onload = function(ev) {
+      var csvRecords = reader.result.split(/\s/);
+      var period = document.getElementById("period");
+      period.selectedIndex = csvRecords.length-1;//最後は、改行のみなのでカウントしない
+      inputItems();
+      for (var i=0; i <csvRecords.length-1; i++) {
+        var csv = csvRecords[i];
+        var record = csv.split(',');
+        var j = i +1;
+        var ul = document.getElementById("dayofweek" + j);
+        var lis = ul.children;
+        for (var column =0; column < lis.length; column++) {
+          var li = lis[column];
+          var input = li.getElementsByTagName('input');
+          if (record[column] === "\"\"") continue;//未入力のものは、復元しない
+          input[0].value = record[column];
+        }
+      }
+    }
   }
 
   function getPostData() {
