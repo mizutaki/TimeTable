@@ -6,24 +6,37 @@
   <script type="text/javascript" src="/js/pdf.js"></script>
   <title>TimeTable</title>
 </head>
-<div id="timetable" name="timetable">
-  <select id="period" name="period" onChange="inputItems();">
-    <option value="0" selected>時間を指定しください</option>
-    <option value="1">1時間</option>
-    <option value="2">2時間</option>
-    <option value="3">3時間</option>
-    <option value="4">4時間</option>
-    <option value="5">5時間</option>
-    <option value="6">6時間</option>
-    <option value="7">7時間</option>
-  </select>
-  <input type="button" value="PDF出力" onclick="downloadPDF();">
-  <input type="button" value="バックアップファイル出力" onclick="downloadBackupFile();">
-  <input type="file" id="readfile" value="バックアップファイル読み込み" onclick="readBackupFile();">
-  <input type="button" value="プレビュー" onclick="previewPDF();">
-  <div id="previewPDF">
-  </div>
-</div>
+<body>
+  <article>
+    <section>
+      <div>
+      <label class="input"><input type="button" value="プレビュー" onclick="previewPDF();">プレビュー</label>
+      <label class="input"><input type="button" value="PDF出力" onclick="downloadPDF();">PDF出力</label>
+      <label class="input"><input type="button" onclick="downloadBackupFile();" />バックアップファイル出力</label>
+      <label class="input"><input type="file" id="readfile" />バックアップファイル選択</label>
+      </div>
+    </sction>
+    <section>
+      <div id="timetable" name="timetable">
+      <select id="period" name="period" onChange="inputItems();">
+        <option value="0" selected>時間を指定しください</option>
+        <option value="1">1時間</option>
+        <option value="2">2時間</option>
+        <option value="3">3時間</option>
+        <option value="4">4時間</option>
+        <option value="5">5時間</option>
+        <option value="6">6時間</option>
+        <option value="7">7時間</option>
+      </select>
+      </div>
+    </section>
+  </article>
+  <aside>
+    <section>
+    <div id="previewPDF">
+    </div>
+    </section>
+  </aside>
 <script type="text/javascript">
   var readfile = document.getElementById("readfile");
   readfile.addEventListener("change", function(evt) {
@@ -39,7 +52,8 @@
     timePeriod.setAttribute("id","timePeriod");
     for (var i = 1; i <= index; i++) {
       var div = document.createElement("div");
-      div.setAttribute("id", "timePeriod" + i);
+      //div.setAttribute("id", "timePeriod" + i);
+      div.setAttribute("class", "timePeriod");
       var p = document.createElement("p");
       p.textContent = i; 
       div.appendChild(p);
@@ -184,4 +198,5 @@
     });
   }
 </script>
+</body>
 </html>
