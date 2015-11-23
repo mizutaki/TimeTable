@@ -3,6 +3,8 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="/main.css" media="screen">
   <script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="/js/pdf.js"></script>
+  <title>TimeTable</title>
 </head>
 <div id="timetable" name="timetable">
   <select id="period" name="period" onChange="inputItems();">
@@ -12,11 +14,15 @@
     <option value="3">3時間</option>
     <option value="4">4時間</option>
     <option value="5">5時間</option>
-	  <option value="6">6時間</option>
+    <option value="6">6時間</option>
+    <option value="7">7時間</option>
   </select>
   <input type="button" value="PDF出力" onclick="downloadPDF();">
   <input type="button" value="バックアップファイル出力" onclick="downloadBackupFile();">
   <input type="file" id="readfile" value="バックアップファイル読み込み" onclick="readBackupFile();">
+  <input type="button" value="プレビュー" onclick="previewPDF();">
+  <div id="previewPDF">
+  </div>
 </div>
 <script type="text/javascript">
   var readfile = document.getElementById("readfile");
@@ -25,7 +31,7 @@
   },false);
 
   function inputItems() {
-    init();
+    init("timePeriod");
     var obj = document.getElementById("period");
     var index = obj.selectedIndex;
     var form = document.getElementById("timetable");
@@ -58,10 +64,10 @@
     }
   }
 
-  function init() {
-    var timePeriod = document.getElementById("timePeriod");
-    if (timePeriod == null) return;
-    timePeriod.parentNode.removeChild(timePeriod);
+  function init(element) {
+    var elm = document.getElementById(element);
+    if (elm == null) return;
+    elm.parentNode.removeChild(elm);
   }
 
   function changeDayOfWeek(i) {
@@ -155,6 +161,27 @@
     }
     var records = JSON.stringify(timeTable);
     return records
+  }
+
+  function previewPDF() {
+    init("framePDF");
+    var records = getPostData();
+    $.ajax({
+      type: "POST",
+      url: "/output_pdf",
+      data: {
+        records: records,
+      },
+      dataType: 'html'
+    }).done(function(res) {
+      var div = document.getElementById("previewPDF");
+      var iframe = document.createElement('iframe');
+      iframe.setAttribute("id", "framePDF");
+      iframe.setAttribute("src", "images/app.pdf");
+      div.appendChild(iframe);
+    }).fail(function(res) {
+      alert("error");
+    });
   }
 </script>
 </html>
