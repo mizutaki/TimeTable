@@ -47,7 +47,7 @@ class MainApp < Sinatra::Base
       pdf.text "TimeTable"
       pdf.bounding_box([0,670],:width=>550,:height=>700) {
         pdf.table(timetable, :cell_style => {:inline_format => true, :width => 90, :height => 90, :align => :center, :valign => :center }) do
-          vertical = cells.columns(1..records.length).rows(0)
+          vertical = cells.columns(1..6).rows(0)
           vertical.background_color = "3366FF"
           vertical.text_color = "FFFFFF"
           horizontal = cells.columns(0).rows(1..records.length)
